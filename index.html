@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ר״ת בקק״צ</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen active">
+            <h1>ר״ת בקק״צ</h1>
+            <p class="subtitle">כמה ראשי תיבות תספיקו בדקה?</p>
+            <button id="start-btn" class="btn">התחל משחק</button>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div class="hud">
+                <div class="timer-container">
+                    <span class="label">זמן:</span>
+                    <span id="timer">60</span>
+                </div>
+                <div class="score-container">
+                    <span class="label">הצלחות:</span>
+                    <span id="score">0</span>
+                </div>
+            </div>
+            
+            <div class="game-area">
+                <div class="acronym-display" id="acronym-display">???</div>
+                <div class="input-area" id="input-container">
+                    <!-- Boxes will be injected here -->
+                </div>
+                <div id="feedback" class="feedback"></div>
+            </div>
+        </div>
+
+        <!-- End Screen -->
+        <div id="end-screen" class="screen">
+            <h2>הזמן נגמר!</h2>
+            <div class="final-score">
+                <p>הספקת לפענח</p>
+                <span id="final-score-number">0</span>
+                <p>ראשי תיבות</p>
+            </div>
+            <button id="restart-btn" class="btn">שחק שוב</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
