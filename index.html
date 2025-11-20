@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,12 +8,15 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="container">
         <!-- Start Screen -->
         <div id="start-screen" class="screen active">
             <h1>ר״ת בקק״צ</h1>
             <p class="subtitle">כמה ראשי תיבות תספיקו בדקה?</p>
+            <p class="subtitle" style="font-weight: bold; margin-top: 10px; color: var(--accent-secondary);">60 שניות
+                זוז!</p>
             <button id="start-btn" class="btn">התחל משחק</button>
         </div>
 
@@ -28,7 +32,7 @@
                     <span id="score">0</span>
                 </div>
             </div>
-            
+
             <div class="game-area">
                 <div class="acronym-display" id="acronym-display">???</div>
                 <div class="input-area" id="input-container">
@@ -51,4 +55,5 @@
     </div>
     <script src="script.js"></script>
 </body>
+
 </html>

@@ -11,7 +11,25 @@ const acronyms = [
     { q: "מש״מ", a: "משחקי מלחמה" },
     { q: "שנ״מ", a: "שינוי משימה" },
     { q: "פקמ״ב", a: "פקודת מבצע" },
-    { q: "שדל״ן", a: "שידור לאחור נייד" }
+    { q: "שדל״ן", a: "שידור לאחור נייד" },
+    { q: "צק״ג", a: "צוות קרב גדודי" },
+    { q: "צק״ח", a: "צוות קרב חטיבתי" },
+    { q: "נוה״ק", a: "נוהל קרב" },
+    { q: "ניהו״ק", a: "ניהול קרב" },
+    { q: "מ״ק", a: "מכשיר קשר" },
+    { q: "מקמ״ש", a: "מקלט משדר" },
+    { q: "דפ״א", a: "דרך פעולה אפשרית" },
+    { q: "דפ״ן", a: "דרך פעולה נבחרת" },
+    { q: "צי״ד", a: "צבא יבשה דיגיטלי" },
+    { q: "רמ״מ", a: "רמה ממונה" },
+    { q: "נמ״ר", a: "נגמש מרכבה" },
+    { q: "קרפ״ג", a: "קצין רפואה גדודי" },
+    { q: "פו״ש", a: "פיקוד ושליטה" },
+    { q: "שו״ב", a: "שליטה ובקרה" },
+    { q: "מפל״ז", a: "מפלי בזלת" },
+    { q: "קש״א", a: "קצין שיתוף ארטילרי" },
+    { q: "ס״צ", a: "סלולר צבאי" },
+    { q: "קק״צ", a: "קורס קצינים" }
 ];
 
 // Game State
@@ -22,6 +40,7 @@ let timerInterval = null;
 let isGameActive = false;
 let userInput = []; // Array of characters matching the answer length (excluding spaces)
 let answerStructure = []; // Array of objects defining word lengths
+let availableAcronyms = [];
 
 // DOM Elements
 const startScreen = document.getElementById('start-screen');
@@ -44,6 +63,7 @@ function startGame() {
     score = 0;
     timeLeft = 60;
     isGameActive = true;
+    availableAcronyms = [...acronyms]; // Create a fresh copy
 
     scoreDisplay.textContent = score;
     timerDisplay.textContent = timeLeft;
@@ -76,9 +96,17 @@ function endGame() {
 }
 
 function nextAcronym() {
-    // Pick a random acronym
-    const randomIndex = Math.floor(Math.random() * acronyms.length);
-    currentAcronym = acronyms[randomIndex];
+    // If we ran out of words, refill
+    if (availableAcronyms.length === 0) {
+        availableAcronyms = [...acronyms];
+    }
+
+    // Pick a random acronym from the available pool
+    const randomIndex = Math.floor(Math.random() * availableAcronyms.length);
+    currentAcronym = availableAcronyms[randomIndex];
+
+    // Remove it from the pool so it doesn't repeat
+    availableAcronyms.splice(randomIndex, 1);
 
     acronymDisplay.textContent = currentAcronym.q;
 
@@ -129,6 +157,12 @@ function renderInputBoxes() {
 
 function handleKeyPress(e) {
     if (!isGameActive) return;
+
+    // Ignore Space key
+    if (e.key === ' ') {
+        e.preventDefault();
+        return;
+    }
 
     // Handle Backspace
     if (e.key === 'Backspace') {
