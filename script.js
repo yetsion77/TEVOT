@@ -53,45 +53,13 @@ const scoreDisplay = document.getElementById('score');
 const finalScoreDisplay = document.getElementById('final-score-number');
 const startBtn = document.getElementById('start-btn');
 const restartBtn = document.getElementById('restart-btn');
-const hiddenInput = document.getElementById('hidden-input');
-
-// Event Listeners
-startBtn.addEventListener('click', startGame);
-restartBtn.addEventListener('click', startGame);
-hiddenInput.addEventListener('input', handleInput);
-gameScreen.addEventListener('click', () => {
-    if (isGameActive) hiddenInput.focus();
-});
-
-function startGame() {
-    score = 0;
-    timeLeft = 60;
-    isGameActive = true;
-    availableAcronyms = [...acronyms];
-
-    scoreDisplay.textContent = score;
+timerInterval = setInterval(() => {
+    timeLeft--;
     timerDisplay.textContent = timeLeft;
-
-    startScreen.classList.remove('active');
-    endScreen.classList.remove('active');
-    gameScreen.classList.add('active');
-
-    nextAcronym();
-    startTimer();
-
-    // Focus input for mobile
-    setTimeout(() => hiddenInput.focus(), 100);
-}
-
-function startTimer() {
-    if (timerInterval) clearInterval(timerInterval);
-    timerInterval = setInterval(() => {
-        timeLeft--;
-        timerDisplay.textContent = timeLeft;
-        if (timeLeft <= 0) {
-            endGame();
-        }
-    }, 1000);
+    if (timeLeft <= 0) {
+        endGame();
+    }
+}, 1000);
 }
 
 function endGame() {
