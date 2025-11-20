@@ -53,17 +53,21 @@ const scoreDisplay = document.getElementById('score');
 const finalScoreDisplay = document.getElementById('final-score-number');
 const startBtn = document.getElementById('start-btn');
 const restartBtn = document.getElementById('restart-btn');
+const hiddenInput = document.getElementById('hidden-input');
 
 // Event Listeners
 startBtn.addEventListener('click', startGame);
 restartBtn.addEventListener('click', startGame);
-document.addEventListener('keydown', handleKeyPress);
+hiddenInput.addEventListener('input', handleInput);
+gameScreen.addEventListener('click', () => {
+    if (isGameActive) hiddenInput.focus();
+});
 
 function startGame() {
     score = 0;
     timeLeft = 60;
     isGameActive = true;
-    availableAcronyms = [...acronyms]; // Create a fresh copy
+    availableAcronyms = [...acronyms];
 
     scoreDisplay.textContent = score;
     timerDisplay.textContent = timeLeft;
@@ -74,6 +78,9 @@ function startGame() {
 
     nextAcronym();
     startTimer();
+
+    // Focus input for mobile
+    setTimeout(() => hiddenInput.focus(), 100);
 }
 
 function startTimer() {
@@ -93,32 +100,27 @@ function endGame() {
     gameScreen.classList.remove('active');
     endScreen.classList.add('active');
     finalScoreDisplay.textContent = score;
+    hiddenInput.blur();
 }
 
 function nextAcronym() {
-    // If we ran out of words, refill
     if (availableAcronyms.length === 0) {
         availableAcronyms = [...acronyms];
     }
 
-    // Pick a random acronym from the available pool
     const randomIndex = Math.floor(Math.random() * availableAcronyms.length);
     currentAcronym = availableAcronyms[randomIndex];
-
-    // Remove it from the pool so it doesn't repeat
     availableAcronyms.splice(randomIndex, 1);
 
     acronymDisplay.textContent = currentAcronym.q;
 
-    // Prepare input structure
-    const words = currentAcronym.a.split(' ');
-    answerStructure = words.map(w => w.length);
-
-    // Reset user input
+    // Reset input
     const totalLetters = currentAcronym.a.replace(/ /g, '').length;
     userInput = new Array(totalLetters).fill('');
+    hiddenInput.value = ''; // Clear hidden input
 
     renderInputBoxes();
+    hiddenInput.focus();
 }
 
 function renderInputBoxes() {
@@ -135,13 +137,11 @@ function renderInputBoxes() {
             const box = document.createElement('div');
             box.className = 'char-box';
 
-            // If we have a letter at this index, show it
             if (userInput[globalCharIndex]) {
                 box.textContent = userInput[globalCharIndex];
                 box.classList.add('filled');
             }
 
-            // Highlight the next empty box
             const firstEmptyIndex = userInput.findIndex(c => c === '');
             if (globalCharIndex === firstEmptyIndex) {
                 box.classList.add('active');
@@ -155,38 +155,48 @@ function renderInputBoxes() {
     });
 }
 
-function handleKeyPress(e) {
-    if (!isGameActive) return;
-
-    // Ignore Space key
-    if (e.key === ' ') {
-        e.preventDefault();
+function handleInput(e) {
+    if (!isGameActive) {
+        hiddenInput.value = '';
         return;
     }
 
-    // Handle Backspace
-    if (e.key === 'Backspace') {
-        const lastFilledIndex = userInput.findLastIndex(c => c !== '');
-        if (lastFilledIndex !== -1) {
-            userInput[lastFilledIndex] = '';
-            renderInputBoxes();
-            // Remove any error states if they exist
-            const boxes = document.querySelectorAll('.char-box');
-            boxes.forEach(b => b.classList.remove('wrong'));
+    const val = hiddenInput.value;
+    // Filter out spaces
+    if (val.includes(' ')) {
+        hiddenInput.value = val.replace(/ /g, '');
+        return;
+    }
+
+    const currentString = val.split('');
+
+    // If user deleted (backspace)
+    if (currentString.length < userInput.filter(c => c !== '').length) {
+        // Find the last filled index and clear it
+        const lastFilled = userInput.findLastIndex(c => c !== '');
+        if (lastFilled !== -1) {
+            userInput[lastFilled] = '';
         }
+        renderInputBoxes();
         return;
     }
 
-    if (e.key.length === 1) {
-        const firstEmptyIndex = userInput.findIndex(c => c === '');
-        if (firstEmptyIndex !== -1) {
-            userInput[firstEmptyIndex] = e.key;
+    // If user added a char
+    if (currentString.length > userInput.filter(c => c !== '').length) {
+        const char = currentString[currentString.length - 1];
+        const firstEmpty = userInput.findIndex(c => c === '');
+
+        if (firstEmpty !== -1) {
+            userInput[firstEmpty] = char;
             renderInputBoxes();
 
-            // Check if word is complete
             if (userInput.every(c => c !== '')) {
                 checkFullAnswer();
             }
+        } else {
+            // Input is full but maybe extra chars typed?
+            // Reset hidden input to match valid length
+            hiddenInput.value = userInput.join('');
         }
     }
 }
@@ -215,39 +225,36 @@ function handleSuccess() {
 }
 
 function handleMistake() {
-    // Lock game temporarily
     isGameActive = false;
+    hiddenInput.disabled = true; // Disable input during error show
 
     const fullAnswerNoSpaces = currentAcronym.a.replace(/ /g, '');
     const boxes = document.querySelectorAll('.char-box');
 
-    // 1. Mark errors
     userInput.forEach((char, index) => {
         if (char !== fullAnswerNoSpaces[index]) {
             if (boxes[index]) boxes[index].classList.add('wrong');
         }
     });
 
-    // 2. Reveal correct answer after a short delay
     setTimeout(() => {
-        // Fill with correct answer
         userInput = fullAnswerNoSpaces.split('');
         renderInputBoxes();
 
-        // Mark all as filled/revealed
         const newBoxes = document.querySelectorAll('.char-box');
         newBoxes.forEach(b => {
-            b.classList.remove('wrong'); // Remove red
+            b.classList.remove('wrong');
             b.classList.add('filled');
             b.style.borderColor = 'var(--accent-color)';
         });
-    }, 500); // 0.5s to see your mistake
+    }, 500);
 
-    // 3. Move on
     setTimeout(() => {
         isGameActive = true;
+        hiddenInput.disabled = false;
+        hiddenInput.focus(); // Refocus
         nextAcronym();
-    }, 2000); // 1.5s to read the correct answer
+    }, 2000);
 }
 
 // Polyfill for findLastIndex if needed (older browsers)
