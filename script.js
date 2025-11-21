@@ -1,6 +1,6 @@
 const acronyms = [
-    { q: "קשר״ג", a: "קשר גדודי" },
-    { q: "קשר״ח", a: "קשר חטיבתי" },
+    { q: "קשר״ג", a: "קצין קשר גדודי" },
+    { q: "קשר״ח", a: "קצין קשר חטיבתי" },
     { q: "קפ״ק", a: "קבוצת פקודות" },
     { q: "ת״ג", a: "תדר גבוה" },
     { q: "קשר״ר", a: "קצין קשר ראשי" },
@@ -29,7 +29,18 @@ const acronyms = [
     { q: "מפל״ז", a: "מפלי בזלת" },
     { q: "קש״א", a: "קצין שיתוף ארטילרי" },
     { q: "ס״צ", a: "סלולר צבאי" },
-    { q: "קק״צ", a: "קורס קצינים" }
+    { q: "קק״צ", a: "קורס קצינים" },
+    { q: "אול״ר", a: "אמצעי ורסטילי רשתי" },
+    { q: "בצ״פ", a: "בסיס ציוד פיקודי" },
+    { q: "רק״ם", a: "רכב קרב משוריין" },
+    { q: "לומ״ר", a: "לוחמה מבוססת רשת" },
+    { q: "תקש״ל", a: "תקשורת לוויינית" },
+    { q: "רמ״ד", a: "ראש מדור" },
+    { q: "רע״ן", a: "ראש ענף" },
+    { q: "אט״ל", a: "אגף הטכנולוגיה והלוגיסטיקה" },
+    { q: "פת״ל", a: "פלטפורמה תקשובית לתמרון" },
+    { q: "יג״ע", a: "יחס גלים עומדים" },
+    { q: "מרה״ס", a: "מרכז הספקה" }
 ];
 
 // Game State
@@ -237,7 +248,7 @@ function handleSuccess() {
 
 function handleMistake() {
     isGameActive = false;
-    hiddenInput.disabled = true; // Disable input during error show
+    // hiddenInput.disabled = true; // Removed to keep keyboard open
 
     const fullAnswerNoSpaces = currentAcronym.a.replace(/ /g, '');
     const boxes = document.querySelectorAll('.char-box');
@@ -262,8 +273,8 @@ function handleMistake() {
 
     setTimeout(() => {
         isGameActive = true;
-        hiddenInput.disabled = false;
-        hiddenInput.focus(); // Refocus
+        // hiddenInput.disabled = false; // Removed
+        hiddenInput.focus(); // Refocus just in case
         nextAcronym();
     }, 2000);
 }
