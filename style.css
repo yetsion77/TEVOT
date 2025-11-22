@@ -242,29 +242,137 @@ h2 {
     }
 }
 
+/* End Screen Buttons */
+.end-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 300px;
+}
+
+.btn.secondary {
+    border-color: var(--text-color);
+    color: var(--text-color);
+    font-size: 1.2rem;
+    padding: 10px 30px;
+}
+
+.btn.secondary:hover {
+    background: var(--text-color);
+    color: var(--bg-color);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+/* Dictionary Screen */
+.dictionary-list {
+    width: 100%;
+    max-height: 60vh;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+    padding: 10px;
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.dict-item {
+    background: var(--box-bg);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--box-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dict-q {
+    color: var(--accent-color);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.dict-a {
+    opacity: 0.9;
+}
+
+/* Scrollbar for dictionary */
+.dictionary-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.dictionary-list::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+
+.dictionary-list::-webkit-scrollbar-thumb {
+    background: var(--box-border);
+    border-radius: 4px;
+}
+
 @media (max-width: 600px) {
+    body {
+        align-items: flex-start;
+        /* Align to top for mobile keyboard */
+        padding-top: 20px;
+    }
+
+    .container {
+        padding: 10px;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .screen {
+        justify-content: flex-start;
+        /* Push content up */
+        padding-top: 20px;
+        height: 100%;
+    }
+
     h1 {
         font-size: 2.5rem;
+        margin-bottom: 0.5rem;
     }
 
     .acronym-display {
         font-size: 3rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
+        margin-top: 1rem;
     }
 
     .input-area {
-        gap: 15px;
-        /* Smaller gap on mobile */
+        gap: 10px;
+        margin-bottom: 1rem;
+    }
+
+    .word-group {
+        gap: 3px;
     }
 
     .char-box {
-        width: 35px;
-        height: 45px;
-        font-size: 1.5rem;
+        width: 32px;
+        height: 42px;
+        font-size: 1.4rem;
+        border-width: 1px;
     }
 
     .hud {
-        margin-bottom: 1rem;
-        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+        padding: 0;
+    }
+
+    .timer-container,
+    .score-container {
+        padding: 5px 10px;
+    }
+
+    /* Dictionary on mobile */
+    .dictionary-list {
+        grid-template-columns: 1fr;
+        max-height: 70vh;
     }
 }

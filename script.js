@@ -40,13 +40,14 @@ const acronyms = [
     { q: "אט״ל", a: "אגף הטכנולוגיה והלוגיסטיקה" },
     { q: "פת״ל", a: "פלטפורמה תקשובית לתמרון" },
     { q: "יג״ע", a: "יחס גלים עומדים" },
-    { q: "מרה״ס", a: "מרכז הספקה" }
+    { q: "מרה״ס", a: "מרכז הספקה" },
+    { q: "תג״מ", a: "תדר גבוה מאוד" }
 ];
 
 // Game State
 let currentAcronym = null;
 let score = 0;
-let timeLeft = 60;
+let timeLeft = 90;
 let timerInterval = null;
 let isGameActive = false;
 let userInput = []; // Array of characters matching the answer length (excluding spaces)
@@ -57,6 +58,7 @@ let availableAcronyms = [];
 const startScreen = document.getElementById('start-screen');
 const gameScreen = document.getElementById('game-screen');
 const endScreen = document.getElementById('end-screen');
+const dictionaryScreen = document.getElementById('dictionary-screen');
 const acronymDisplay = document.getElementById('acronym-display');
 const inputContainer = document.getElementById('input-container');
 const timerDisplay = document.getElementById('timer');
@@ -64,11 +66,16 @@ const scoreDisplay = document.getElementById('score');
 const finalScoreDisplay = document.getElementById('final-score-number');
 const startBtn = document.getElementById('start-btn');
 const restartBtn = document.getElementById('restart-btn');
+const dictBtn = document.getElementById('dict-btn');
+const backBtn = document.getElementById('back-btn');
 const hiddenInput = document.getElementById('hidden-input');
+const dictionaryList = document.getElementById('dictionary-list');
 
 // Event Listeners
 startBtn.addEventListener('click', startGame);
 restartBtn.addEventListener('click', startGame);
+dictBtn.addEventListener('click', showDictionary);
+backBtn.addEventListener('click', showEndScreen);
 hiddenInput.addEventListener('input', handleInput);
 
 // Focus management
@@ -87,7 +94,7 @@ hiddenInput.addEventListener('blur', () => {
 
 function startGame() {
     score = 0;
-    timeLeft = 60;
+    timeLeft = 90;
     isGameActive = true;
     availableAcronyms = [...acronyms];
 
@@ -96,6 +103,7 @@ function startGame() {
 
     startScreen.classList.remove('active');
     endScreen.classList.remove('active');
+    dictionaryScreen.classList.remove('active');
     gameScreen.classList.add('active');
 
     nextAcronym();
@@ -103,6 +111,30 @@ function startGame() {
 
     // Focus input for mobile
     setTimeout(() => hiddenInput.focus(), 100);
+}
+
+function showDictionary() {
+    endScreen.classList.remove('active');
+    dictionaryScreen.classList.add('active');
+
+    // Populate dictionary
+    dictionaryList.innerHTML = '';
+    const sortedAcronyms = [...acronyms].sort((a, b) => a.q.localeCompare(b.q));
+
+    sortedAcronyms.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'dict-item';
+        div.innerHTML = `
+            <span class="dict-q">${item.q}</span>
+            <span class="dict-a">${item.a}</span>
+        `;
+        dictionaryList.appendChild(div);
+    });
+}
+
+function showEndScreen() {
+    dictionaryScreen.classList.remove('active');
+    endScreen.classList.add('active');
 }
 
 function startTimer() {
