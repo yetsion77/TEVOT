@@ -243,7 +243,8 @@ h2 {
 }
 
 /* End Screen Buttons */
-.end-buttons {
+.end-buttons,
+.start-buttons {
     display: flex;
     flex-direction: column;
     gap: 15px;

@@ -53,6 +53,7 @@ let isGameActive = false;
 let userInput = []; // Array of characters matching the answer length (excluding spaces)
 let answerStructure = []; // Array of objects defining word lengths
 let availableAcronyms = [];
+let returnToScreen = 'start';
 
 // DOM Elements
 const startScreen = document.getElementById('start-screen');
@@ -65,6 +66,7 @@ const timerDisplay = document.getElementById('timer');
 const scoreDisplay = document.getElementById('score');
 const finalScoreDisplay = document.getElementById('final-score-number');
 const startBtn = document.getElementById('start-btn');
+const startDictBtn = document.getElementById('start-dict-btn');
 const restartBtn = document.getElementById('restart-btn');
 const dictBtn = document.getElementById('dict-btn');
 const backBtn = document.getElementById('back-btn');
@@ -73,9 +75,10 @@ const dictionaryList = document.getElementById('dictionary-list');
 
 // Event Listeners
 startBtn.addEventListener('click', startGame);
+startDictBtn.addEventListener('click', () => showDictionary('start'));
 restartBtn.addEventListener('click', startGame);
-dictBtn.addEventListener('click', showDictionary);
-backBtn.addEventListener('click', showEndScreen);
+dictBtn.addEventListener('click', () => showDictionary('end'));
+backBtn.addEventListener('click', handleBack);
 hiddenInput.addEventListener('input', handleInput);
 
 // Focus management
@@ -113,7 +116,9 @@ function startGame() {
     setTimeout(() => hiddenInput.focus(), 100);
 }
 
-function showDictionary() {
+function showDictionary(fromSource) {
+    returnToScreen = fromSource;
+    startScreen.classList.remove('active');
     endScreen.classList.remove('active');
     dictionaryScreen.classList.add('active');
 
@@ -132,9 +137,13 @@ function showDictionary() {
     });
 }
 
-function showEndScreen() {
+function handleBack() {
     dictionaryScreen.classList.remove('active');
-    endScreen.classList.add('active');
+    if (returnToScreen === 'start') {
+        startScreen.classList.add('active');
+    } else {
+        endScreen.classList.add('active');
+    }
 }
 
 function startTimer() {
